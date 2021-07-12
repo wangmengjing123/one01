@@ -17,7 +17,7 @@ public class CustomerData {
         for (int i = 0; i <10 ; i++) {
             //每循环一次就诞生1哥customer对象
             Customer customer = new Customer();
-            customer.setAccount("5201314"+"i");
+            customer.setAccount("5201314"+i);
             customer.setPassword("123");
             customer.setCname("张三"+i+"号");
             customer.setMoney(10000.0);

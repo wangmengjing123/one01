@@ -36,7 +36,7 @@ public class CustomerService {
         }
     }
 
-    private void oneOption(@NotNull String option) {
+    private void oneOption(String option) {
         switch (option){
             case "1":
                 System.out.println("余额查询");
@@ -44,77 +44,99 @@ public class CustomerService {
                 goOneHome();
                 break;
             case "2":
-                System.out.println("取款");
-                withdrawMoney();
+
+                goGetMoneyHome();
                 goOneHome();
                 break;
             case "3":
+                doTruanMoney();
                 System.out.println("转账");
-                Money();
                 goOneHome();
                 break;
             case "4":
                 System.out.println("存款");
-                saveMoney();
+                doSaveMoney();
                 goOneHome();
                 break;
             case "5":
                 System.out.println("退卡");
-                System.exit(0);
+                doQuitCard(); 
                 goOneHome();
                 break;
         }
     }
-    //存款
-    private void saveMoney() {
-        System.out.println("请输入您的存款金额：");
-        Scanner input = new Scanner(System.in);
-        int money = input.nextInt();
-        if (currenCustomer!=null){
-            if (money>0){
-                currenCustomer.setMoney(currenCustomer.getMoney()+money);
-                System.out.println("存款成功");
-                System.out.println("你的当前余额为："+currenCustomer.getMoney());
-            }else{
-                System.out.println("输入错误");
-            }
-
+     // 查询余额
+        private void doSelectMoney() {
+            double money = currenCustomer.getMoney();
+            System.out.println(" 余额是 " +money);
         }
+        private void goOneHome(){
+            TextUtil.oneLeveOption();
+            Scanner scanner = new Scanner(System.in);
+            String option = scanner.nextLine();
+            System.out.println("option1 = " + option);
+            oneOption(option); //递归算法
+        }
+
+ 
+    //存款
+        private void doSaveMoney() {
+        System.out.println("请输入您的存款金额：");
+        Scanner scanner = new Scanner(System.in);
+        String moneyIn = scanner.nextLine();
+        Double monetInInt = Double.valueOf(moneyIn);
+        double newMoney = currenCustomer.getMoney() + monetInInt;
+        currenCustomer.setMoney(newMoney);
+            System.out.println("您的账户余额是多少" + newMoney);
+        
     }
     //转账
-    private void Money() {
-        System.out.println("请输入您要转账的卡号：");
-        Scanner account = new Scanner(System.in);
-        int money = account.nextInt();
-        Customer nuser = null;
-        boolean IsExit = false;
+    private void doTruanMoney() {
+      System.out.println("请输入您要转账的卡号：");
+      Scanner scanner = new Scanner(System.in);
+      String otherAccout = scanner.nextLine();
+        System.out.println("otherAccout = " + otherAccout);
+      System.out.println("请输入你转账的金额");
+      String otherMoney = scanner.nextLine();
+      Double otherMoneyInt = Double.parseDouble(otherMoney);
+      double currentMoney = currenCustomer.getMoney()-otherMoneyInt;
+       // System.out.println("customerList = " + customerList);
+      Customer other = null;
+        for (Customer customer : customerList) {
+               if (customer.getAccount().equals(otherAccout)){
+                       other = customer;
+               }
+        }
+        double otherOneMoney = other.getMoney() +otherMoneyInt;
+        currenCustomer.setMoney(currentMoney);
+        other.setMoney(otherOneMoney);
+
     }
     //取款
-    private void withdrawMoney() {
-        Scanner sc = new Scanner(System.in);
-        System.out.println("请输入您的取款金额：");
-        int money = sc.nextInt();
-        if (money>0&&money<=currenCustomer.getMoney()){
-            currenCustomer.setMoney(currenCustomer.getMoney()-money);
-            System.out.println("取款成功");
-            System.out.println("你的当前余额为："+currenCustomer.getMoney());
-        }else {
-            System.out.println("输入错误");
-        }
+    private void goGetMoneyHome() {
+       TextUtil.getMoneyUI();
+       Scanner scanner = new Scanner(System.in);
+       String numIn = scanner.nextLine();
+       if (numIn.equals("1")){
+           double money = currenCustomer.getMoney();
+           money = money-100;
+           System.out.println("你的余额是："+money);
+           currenCustomer.setMoney(money);
+       }
+    }
+    //退卡
+    private void doQuitCard(){
+        System.out.println("您是否继续退卡yes /no[Y/N]");
+         Scanner scanner = new Scanner(System.in);
+         String s = scanner.nextLine();
+         if(s.equalsIgnoreCase("y")){
+                  TextUtil.welcome(); //结束
+         }
+         if(s.equalsIgnoreCase("n")){
+
+         }
     }
 
-    //查余额
-    private void doSelectMoney() {
-    double money = currenCustomer.getMoney();
-        System.out.println("余额是"+money);
-    }
 
-    private void goOneHome(){
-        //oneOption(option);
-        TextUtil.oneLeveOption();
-        Scanner scanner = new Scanner(System.in);
-        String option = scanner.nextLine();
-        System.out.println("option1 = " + option);
-        oneOption(option);
-    }
+
 }
